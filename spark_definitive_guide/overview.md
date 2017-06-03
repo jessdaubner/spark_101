@@ -1,52 +1,54 @@
 # Spark: The Definitive Guide
 ## Introduction 
 * Spark is a distributed programming model, where the users specifies _transformations_, which build a directed-acyclic-graph (DAG) of instructions, and _actions_, which begin the process of executing the instructions of the graph as a single job.
+* Spark is the most active Apache project
 * A job is broken down into stages and tasks to execute across the cluster.
 * Data is stored as DataFrames or Datasets.
 * To create a new DataFrame/Dataset, the users calls a transformation.
 * To start a compution or convert to native language types, the user calls an action.
-* It's tool for processing data and managing the resources of a cluster of computers
+* Tool for processing data and managing the resources of a cluster of computers
 
 ### Two APIs: Unstructured and Structured
+Spark APIs follow the standard [MAJOR].[MINOR].[MAINTENANCE]
+
 #### Unstructured (RDDs, Accumulators, Broadcast variables)
-* Low-level, meant for manipulating raw java objects (8nstructured data like documents)
+* Low-level, meant for manipulating raw java objects (unstructured data like documents)
 
 #### Structured (DataFrames, Datasets and Spark SQL)
 * High-level, for semi-structured and structured data types 
 * Optimized to work with data in a spreadsheet-like interface
 * Most of the same user-facing operatings can be used for _batch_ and _streaming_ computations
 
-* Spark Applications consist of two processes
-### Driver
+### Spark applications consist of two processes
+#### Driver
 Driver process is the heart of the Spark application and maintains all relevant information during the lifetime of the application.
 * sits on the driver or master node 
 * contains language bindings
 * responsible for three things
-1. maintaining information about the Spark application
-2. responding to a user's program
-3. scheduling work across executors
-* driver is represented through the `SparkSession`
-* `SparkSession` is the entry point to executing code in Spark; it's the user-facing part of Spark application
+....1. maintaining information about the Spark application
+....2. responding to user program
+....3. scheduling work across executors
+* driver is represented through `SparkSession`
+* `SparkSession` is the entry point to executing code in Spark; the user-facing part of the Spark application
 
-### Executors
+#### Executors
 2. Set of executors 
 * sit on worker nodes and is responsible for two things:
 1. executing code assigned to it by the driver
 2. reporting the state of the computation back to the driver node
 
-Cluster Manager
+### Cluster Manager
 * The cluster manager controls physical machines and allocates resources to Spark applications
-* Options are Spark's standalone cluster manager, YARN, or Mesos
+* Options are standalone, default cluster manager, YARN, or Mesos
 
-Local Mode
+#### Local Mode
 * Since the driver and executor are processes, they can be run locally
 * In this case the workers are threads on your local machine
 
-Supported Languages
-* Spark is written in Scala; hence, it's Spark's "default" language
+### Supported Languages
+* Spark is written in Scala; hence, Scala is the "default" language
 * Python supports most of what Scala supports
 * Java, SQL and R are also supported
-
 
 ### DataFrames
 * A DataFrame is a table of data with rows and columns

@@ -3,8 +3,7 @@
 * Performance is not only about running faster but running at all
 * Keep an eye towards the structure of data and requirements of cluster from the onset
 * Spark is highly configurable and exposed at a higher level than other frameworks
-* using `groupByKey` can cause OOM exeptions but for data with few duplicates it can be just as performant
-* Understanding your specific use case and system and how Spark will interact with it is a must
+* Must understand specific use case, data, and system (e.g, the oft repeated advice to avoid `groupByKey` for fear of OOM exeptions is not necessarily applicable for data with few duplicates)
 
 ## Learn Spark in Scala 
 * Serious performant Spark development is most easily achieved in Scala
@@ -19,6 +18,3 @@
 * Spark SQL minimizes performance differences between non-JVM languages
 * Disadvantage of Scala is that there are few specialized data science libraries (i.e., numpy doesn't exist in Java and Scala)
 
-Spark API follows the standard [MAJOR].[MINOR].[MAINTENANCE]
-* Spark is the most active Apache project
-`Datasets` are Spark SQL's strongly typed, data abstraction
