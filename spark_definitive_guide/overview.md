@@ -28,12 +28,10 @@ Driver process is the heart of the Spark application and maintains all relevant 
 ....1. maintaining information about the Spark application
 ....2. responding to user program
 ....3. scheduling work across executors
-* driver is represented through `SparkSession`
-* `SparkSession` is the entry point to executing code in Spark; the user-facing part of the Spark application
+* the driver is represented through `SparkSession`
 
 #### Executors
-2. Set of executors 
-* sit on worker nodes and is responsible for two things:
+Executors sit on worker nodes and are responsible for two things:
 1. executing code assigned to it by the driver
 2. reporting the state of the computation back to the driver node
 
@@ -50,15 +48,6 @@ Driver process is the heart of the Spark application and maintains all relevant 
 * Python supports most of what Scala supports
 * Java, SQL and R are also supported
 
-### DataFrames
-* A DataFrame is a table of data with rows and columns
-* The list of columns and their types is called a _schema_ and can be accessed with `printSchema()` or `describe`; analogous to the way schema is used with databases to describe the data types of columns in a table
-* Pandas DataFrames and R DataFrames can be converted to Spark DataFrames
-* DataFrames are the easiest and most efficient Spark abstraction
-
-* Spark's cores abstractions are Resilient Distributed Datasets (RDDs), DataFrames, Datasets, SQL Tables
-* All abstractions represent distributed collections of data 
-
 ### Partitions
 * In order to leverage the resources of the machines in the cluster, data is broken into chunks, called partitions
 * A _partition_ is a collection of rows that sit on one physical machine in the cluster
@@ -69,9 +58,8 @@ Driver process is the heart of the Spark application and maintains all relevant 
 * A shuffle occurs when multiple machines need to share data
 * Break up tasks (data + computation) and give them to the executors as efficiently as possible 
 
-
 ### Computations
-* Computations are organized into two categories: transformations and actions
+Computations are organized into two categories: transformations and actions
 
 ### Transformations
 * Core data structures are immutable (they cannot be changed once created)
@@ -80,13 +68,12 @@ Driver process is the heart of the Spark application and maintains all relevant 
 
 ### Actions
 * Actions instruct Spark to compute a result from a series of transformations; actually triggers the computation
-* Transformations aren't executed until an action is called on a DataFrame or one of its derivatives
+* Transformations are not executed until an action is called on a DataFrame or one of its derivatives
 * Example: `count()`, `take()`
 * There are three kinds of actions:
-1. Actions to view data in console
-2. Actions to collect data to native objects
-3. Actions to write to output data sources
-
+....1. Actions to view data in console
+....2. Actions to collect data to native objects
+....3. Actions to write to output data sources
 
 ### Spark UI
 * Users can monitor the progress of their Spark job through the UI
@@ -94,10 +81,10 @@ Driver process is the heart of the Spark application and maintains all relevant 
 * Spark UI maintains information on the state of the Spark job, environment and cluster state 
 * Very useful for tunning and debugging Spark jobs
 
-### `SparkSession`
-* `SparkSession` is the entry point for performing work the cluster
-* Use to parallelize collections and create DataFrames directy from a file or set of files
-```
+### SparkSession
+* `SparkSession` is the entry point for performing work the cluster; the user-facing part of the Spark application
+* Used to parallelize collections and create DataFrames directy from a file or set of files
+```python
 df = spark.read.json("path/to/file")
 df.take(2) # returns array of Row objects
 df.sort("count")
@@ -108,13 +95,13 @@ df2 = (spark
        .option('header', 'true')
        .csv('path/to/file'))
 ```
-* Use `explain()` on a `DataFrame` to view Spark's transformation (true optimized physical execution) plan; the logical combination of transformations Spark will run on the cluster; use it to make sure code is as optimized as possible!
+* Use `explain()` on a `DataFrame` to view the Spark transformation (true optimized physical execution) plan; the logical combination of transformations Spark will run on the cluster; use it to make sure code is as optimized as possible!
 * Physical plan shown by `explain()` will show `partial_sum` and other commutative actions that are performed partition by partition
-* Spark's logical plan defines _lineage_ for the DataFrame so that Spark can recompute any partition of a DataFrame back to a robust data source (file or database)
+* Logical plan defines _lineage_ for the DataFrame so that Spark can recompute any partition of a DataFrame back to a robust data source (file or database)
 * Spark is always building up a directed acyclic graph of transformations resulting in immutable objects that we can call an action on to see the results
 * `.option()` specifies how to read a file format and take advantage of the structure of the file (e.g., `inferSchema` and `header` for csv files) 
  
-```
+```python
 jsonSchema = (spark.read.format('json')
               .load('path/to/file')
 	      .schema)
@@ -122,11 +109,21 @@ print(jsonSchema)
 ```
 * Schemas can be explicitly set instead of inferred (aka schema on read) to avoid errors (with `.schema()`and lessen computational time
 
-### DataFrames and SQL
+## Abstractions
+* Core abstractions are Resilient Distributed Datasets (RDDs), DataFrames, Datasets, SQL Tables
+* All abstractions represent distributed collections of data 
+
+### DataFrames
+* A DataFrame is a table of data with rows and columns
+* The list of columns and their types is called a _schema_ and can be accessed with `printSchema()` or `describe`; analogous to the way schema is used with databases to describe the data types of columns in a table
+* Pandas DataFrames and R DataFrames can be converted to Spark DataFrames
+* DataFrames are the easiest and most efficient Spark abstraction
+
+### SQL
 * Spark SQL enables uses to register DataFrames as a table or view (temporary table) and query it using SQL
 * There is no performance difference between writing SQL queries and writing DataFrame code as both are computed using the same underlying plan
 * A SQL query against a DataFrame returns another DataFrame
-```
+```python
 # create a table from a DataFrame
 df.createOrReplaceTempView("df_table")
 
@@ -143,7 +140,7 @@ dataFrameWay.explain()
 sqlWay.explain()
 ```
 
-```
+```python
 from pyspark.sql.functions import max
 spark.sql.select("select max("count") from df).take(1)
 df.select(max("count")).take(1)
